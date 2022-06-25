@@ -2,6 +2,7 @@ import {
   Avatar,
   Container,
   IconButton,
+  Link,
   List,
   ListItem,
   ListItemAvatar,
@@ -10,12 +11,13 @@ import {
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { getAllFiles } from "../store/filesAction";
+import { deleteFile, getAllFiles } from "../store/filesAction";
 import { AppDispatch, RootState } from "../store/index.store";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import { Endpoints } from "../constants/endpoints";
 
 interface HomeProps {}
 
@@ -27,12 +29,24 @@ const Home: React.FC<HomeProps> = () => {
     dispatch(getAllFiles());
   }, [dispatch]);
 
+  const onDelete = (id: String) => {
+    dispatch(deleteFile(id));
+  };
+
+  const onRename = (id: String) => {};
+
   return (
     <div>
       <Container maxWidth="md">
         <List>
           {files.map((file: any) => {
-            return <FileItem filename={file.filename} id={file._id} />;
+            return (
+              <FileItem
+                filename={file.filename}
+                id={file._id}
+                onDelete={onDelete}
+              />
+            );
           })}
         </List>
       </Container>
@@ -43,20 +57,21 @@ const Home: React.FC<HomeProps> = () => {
 interface FileItemProps {
   filename: String;
   id: String;
+  onDelete: (id: String) => void;
 }
 
-const FileItem: React.FC<FileItemProps> = ({ filename, id }) => {
+const FileItem: React.FC<FileItemProps> = ({ filename, id, onDelete }) => {
   return (
     <ListItem
       secondaryAction={
         <>
-          <IconButton
-            edge="end"
-            aria-label="download"
-            style={{ marginLeft: "1rem" }}
+          <Link
+            href={`${Endpoints.backendUrl}${Endpoints.getFile}/${id}`}
+            target="_blank"
+            download={true}
           >
             <DownloadRoundedIcon />
-          </IconButton>
+          </Link>
           <IconButton
             style={{ marginLeft: "1rem" }}
             edge="end"
@@ -68,6 +83,7 @@ const FileItem: React.FC<FileItemProps> = ({ filename, id }) => {
             style={{ marginLeft: "1rem" }}
             edge="end"
             aria-label="delete"
+            onClick={() => onDelete(id)}
           >
             <DeleteIcon />
           </IconButton>
