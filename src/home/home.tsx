@@ -1,7 +1,6 @@
 import {
   Avatar,
   Container,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -31,15 +30,6 @@ const Home: React.FC<HomeProps> = () => {
   return (
     <div>
       <Container maxWidth="md">
-        {/* <Grid container>
-          {files.map((file: any) => {
-            return (
-              <Grid item xs={12}>
-                <div>{file.filename}</div>
-              </Grid>
-            );
-          })}
-        </Grid> */}
         <List>
           {files.map((file: any) => {
             return <FileItem filename={file.filename} id={file._id} />;
@@ -60,13 +50,25 @@ const FileItem: React.FC<FileItemProps> = ({ filename, id }) => {
     <ListItem
       secondaryAction={
         <>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton
+            edge="end"
+            aria-label="download"
+            style={{ marginLeft: "1rem" }}
+          >
             <DownloadRoundedIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton
+            style={{ marginLeft: "1rem" }}
+            edge="end"
+            aria-label="edit"
+          >
             <EditRoundedIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton
+            style={{ marginLeft: "1rem" }}
+            edge="end"
+            aria-label="delete"
+          >
             <DeleteIcon />
           </IconButton>
         </>
