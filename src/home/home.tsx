@@ -35,6 +35,8 @@ const Home: React.FC<HomeProps> = () => {
 
   const onRename = (id: String) => {};
 
+  // TODO: Add Rename Functionality
+
   return (
     <div>
       <Container maxWidth="md">
