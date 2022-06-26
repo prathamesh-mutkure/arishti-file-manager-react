@@ -30,12 +30,17 @@ export const getAllFiles = () => {
   };
 };
 
-export const renameFile = (id: String) => {
+export const renameFile = (id: String, newFileName: String, next?: any) => {
+  const data = {
+    rename_to: newFileName,
+  };
+
   return (dispatch: any) => {
     axios
-      .patch(`${Endpoints.patchFile}/${id}`)
+      .patch(`${Endpoints.patchFile}/${id}`, data)
       .then((res: AxiosResponse) => {
         dispatch(getAllFiles());
+        next();
       })
       .catch((err: any) => {
         console.log("Error renaming file: ", err);
