@@ -56,6 +56,8 @@ const Home: React.FC<HomeProps> = () => {
   );
 };
 
+// TODO: Put into seperate file
+
 interface FileItemProps {
   filename: String;
   id: String;
