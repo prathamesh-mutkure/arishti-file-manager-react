@@ -3,8 +3,21 @@ import { Endpoints } from "../constants/endpoints";
 import { filesActions } from "./filesSlice";
 import { AppDispatch } from "./index.store";
 
-export const uploadFile = () => {
-  // TODO: Upload Here
+export const uploadFile = (file: File, next: any) => {
+  const data = new FormData();
+  data.append("file", file);
+
+  return (dispatch: any) => {
+    axios
+      .post(Endpoints.postFile, data)
+      .then((res: AxiosResponse) => {
+        dispatch(getAllFiles());
+        next();
+      })
+      .catch((err: any) => {
+        console.log("Error renaming file: ", err);
+      });
+  };
 };
 
 export const getFile = (id: String) => {

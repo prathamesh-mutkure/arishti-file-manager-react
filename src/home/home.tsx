@@ -1,11 +1,20 @@
-import { Container, List } from "@mui/material";
+import { Container, IconButton, List } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { deleteFile, getAllFiles, renameFile } from "../store/filesAction";
+import NavBar from "../components/NavBar";
+import {
+  deleteFile,
+  getAllFiles,
+  renameFile,
+  uploadFile,
+} from "../store/filesAction";
 import { AppDispatch, RootState } from "../store/index.store";
 import FileListItem from "./widgets/file-list-item";
 import FileRenameModal from "./widgets/file-rename-modal";
+import AddIcon from "@mui/icons-material/Add";
+import classes from "./home.module.scss";
+import FileUploadModal from "./widgets/file-upload-modal";
 
 interface HomeProps {}
 
@@ -13,6 +22,7 @@ const Home: React.FC<HomeProps> = () => {
   const dispatch: AppDispatch = useDispatch();
   const files = useSelector((state: RootState) => state.files.files);
   const [isOpen, setIsOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [fileToRename, setFileToRename] = useState<any | null>(null);
 
   useEffect(() => {
@@ -28,26 +38,41 @@ const Home: React.FC<HomeProps> = () => {
     setIsOpen(true);
   };
 
-  const handleClose = () => {
+  const onUploadClick = (file: any) => {
+    setIsUploadModalOpen(true);
+  };
+
+  const closeRenameModal = () => {
     setFileToRename(null);
     setIsOpen(false);
   };
 
+  const closeUploadModal = () => {
+    setIsUploadModalOpen(false);
+  };
+
   const handleRename = (id: String, newFileName: String) => {
-    dispatch(renameFile(id, newFileName, handleClose));
+    dispatch(renameFile(id, newFileName, closeRenameModal));
   };
 
   return (
-    <div>
+    <React.Fragment>
+      <NavBar />
+
       <FileRenameModal
         isOpen={isOpen}
-        handleClose={handleClose}
+        handleClose={closeRenameModal}
         id={fileToRename?._id}
         fileName={fileToRename?.filename}
         handleRename={handleRename}
       />
 
-      <Container maxWidth="md">
+      <FileUploadModal
+        isOpen={isUploadModalOpen}
+        handleClose={closeUploadModal}
+      />
+
+      <Container maxWidth="md" className={classes.HomeContainer}>
         <List>
           {files.map((file: any) => {
             return (
@@ -61,7 +86,32 @@ const Home: React.FC<HomeProps> = () => {
           })}
         </List>
       </Container>
-    </div>
+
+      <IconButton
+        size="large"
+        edge="end"
+        color="inherit"
+        sx={{
+          mr: 2,
+          color: "white",
+          backgroundColor: "#1776D1",
+          position: "fixed",
+          right: 0,
+          bottom: 0,
+          margin: "1rem",
+
+          "&:hover": {
+            backgroundColor: "#1776D1",
+            opacity: 0.8,
+          },
+        }}
+        aria-label="Upload File"
+        className={classes.addButton}
+        onClick={onUploadClick}
+      >
+        <AddIcon />
+      </IconButton>
+    </React.Fragment>
   );
 };
 
